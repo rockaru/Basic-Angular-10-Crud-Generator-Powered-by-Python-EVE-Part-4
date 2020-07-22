@@ -5,6 +5,8 @@ import { UpdateComponent } from '../update/update.component'
 import { DeleteComponent } from '../delete/delete.component'
 import { DetailsComponent } from '../details/details.component'
 import { FormService } from '../form.service'
+import { DataService } from '../data.service'
+import { SocketService } from '../socket.service'
 
 @Component({
   selector: 'app-read',
@@ -18,16 +20,27 @@ export class ReadComponent implements OnInit {
   items:any=[]
 
   constructor(
+    private socketService: SocketService,
+    private dataService: DataService,
     private formService: FormService,
     @Inject(MAT_DIALOG_DATA) data
   ) { 
     this.items = data.items
     this.resource = data.resource
     this.form =data.form
+    socketService.joinSocket(this.resource)
   }
 
   ngOnInit() {
-    
+    this.socketService.webSocket.addEventListener("message",(ev)=>{
+      this.loadData()
+    })
+  }
+
+  loadData(){
+    this.dataService.getAll(this.resource).subscribe(data=>{
+      this.items=data["_items"]
+    })
   }
 
   create(){

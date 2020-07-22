@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http'
 import { MatDialog, MatDialogConfig } from "@angular/material/dialog";
 import { DataService } from './data.service'
+import { SocketService } from './socket.service'
 import { FormGroup, FormControl } from '@angular/forms';
 
 @Injectable({
@@ -12,9 +13,11 @@ export class FormService {
   constructor(
     private dialog: MatDialog,
     private httpClient: HttpClient,
-    private dataService: DataService
-
+    private dataService: DataService,
+    private socketService:SocketService
   ) { }
+
+  updateOpened=false
 
   loadFormGroup(form, item?) {
     const group = {}
@@ -138,6 +141,7 @@ export class FormService {
   }
 
   openUpdate(resource, item, component) {
+    this.socketService.sendSocket(item._id)
     const scope = "update"
     let form = JSON.parse(localStorage.getItem(`form-${resource}-${scope}`))
     if (!form) {
@@ -151,18 +155,25 @@ export class FormService {
   }
 
   loadUpdate(form, item, resource, component) {
+    let dialogRef
     const dialogConfig = new MatDialogConfig()
     dialogConfig.data = {
       item: item,
       resource: resource,
       form: form,
     }
-    const dialogRef = this.dialog.open(component, dialogConfig)
+    if (!this.updateOpened){
+    dialogRef = this.dialog.open(component, dialogConfig)
+    this.updateOpened = true
+    }
     dialogRef.afterClosed().subscribe(
       data => {
         if (data) {
           this.dataService.update(resource, item._id, data)
+          
         }
+      this.updateOpened = false
+
       }
     )
 
