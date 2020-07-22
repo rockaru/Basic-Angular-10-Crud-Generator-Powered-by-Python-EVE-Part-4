@@ -1,0 +1,22 @@
+<h2 mat-dialog-title>Delete</h2>
+
+<mat-dialog-content>
+    <form [formGroup]="myFormGroup">
+
+        <div *ngFor="let key of form">
+<mat-form-field>
+            <mat-label>{{key.name}}</mat-label>
+            <input disabled matInput value="{{item[key.name]}}">
+            <mat-placeholder>{{key.name}}</mat-placeholder>
+            </mat-form-field>
+
+        </div>
+
+    </form>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+    <button mat-raised-button color="warn" (click)="delete()">Delete</button>
+    <button mat-button color="primary" matDialogClose>Close</button>
+
+</mat-dialog-actions>

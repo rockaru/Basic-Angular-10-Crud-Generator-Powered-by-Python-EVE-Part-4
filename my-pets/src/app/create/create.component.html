@@ -1,0 +1,23 @@
+<h2 mat-dialog-title>Add {{resource}}</h2>
+
+<mat-dialog-content>
+    <form [formGroup]="myFormGroup">
+
+        <div *ngFor="let key of form">
+            <ng-container [ngSwitch]="key.value.type">
+            <mat-form-field appearance="standard">
+                <mat-label>{{key.name}}</mat-label>
+                <input matInput formControlName="{{key.name}}">
+                <mat-placeholder>{{key.name}}</mat-placeholder>
+            </mat-form-field>
+        </ng-container>
+        </div>
+
+    </form>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+    <button mat-raised-button color="accent" (click)="save()">Save</button>
+    <button mat-button type="button" color="primary" matDialogClose>Close</button>
+
+</mat-dialog-actions>
