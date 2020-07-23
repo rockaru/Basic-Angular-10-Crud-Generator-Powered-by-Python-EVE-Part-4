@@ -17,8 +17,6 @@ export class FormService {
     private socketService:SocketService
   ) { }
 
-  updateOpened=false
-
   loadFormGroup(form, item?) {
     const group = {}
 
@@ -162,17 +160,16 @@ export class FormService {
       resource: resource,
       form: form,
     }
-    if (!this.updateOpened){
+    
     dialogRef = this.dialog.open(component, dialogConfig)
-    this.updateOpened = true
-    }
+    
     dialogRef.afterClosed().subscribe(
       data => {
         if (data) {
           this.dataService.update(resource, item._id, data)
           
         }
-      this.updateOpened = false
+     
 
       }
     )
